@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html itemscope="" itemtype="https://schema.org/LearningResource">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	    <meta charset="utf-8">
+	    <title>Japanese Practice Tool</title>
+	    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
+	    <link rel="stylesheet" type="text/css" href="scripts/style.css">
+	</head>
+	<body>
+		<svg xmlns="http://www.w3.org/2000/svg" style="position: fixed;">
+			<filter id="outlineFilter" overflow="visible" stroke-linecap="round" stroke-linejoin="round">
+				<feMorphology operator="dilate" radius="1" in="SourceAlpha" result="expanded"></feMorphology>
+				<feFlood flood-color="white" result="color"></feFlood>
+				<feComposite in="color" in2="expanded" operator="in" result="outline"></feComposite>
+				<feMerge>
+					<feMergeNode in="outline"></feMergeNode>
+					<feMergeNode in="SourceGraphic"></feMergeNode>
+				</feMerge>
+			</filter>
+		</svg>
+	    <div id="container">
+	        <div id="header">
+				<div id="header-row1">
+		            <div id="header-progress">
+		                <span><span id="correct" class="progress-item">0</span>👍</span>
+		                <span><span id="incorrect" class="progress-item">0</span>👎</span>
+		                <span id="grade">?%</span>
+		                <span><span id="remaining" class="progress-item">?</span>left</span>
+		            </div>
+		            <div id="header-settings">
+			            <input type="button" title="Choose which kanji/kana to practice" value="Settings" onclick="openQuestionSelect();"></input>
+		                <div>
+							<input type="button" title="Increase the number of answers to select from" value="⬆️" onclick="changeNumAnswers(1)"></input><input type="button" title="Decrease the number of answers to select from" value="⬇️" onclick="changeNumAnswers(-1)"></input>
+						</div>
+		            </div>
+				</div>
+				<div id="header-row2">
+			        <div id="question-options">
+						<div style="cursor: pointer;" onclick="updateTestSettings('questionDisplay', 'kanji')"><input type="radio" name="questionDisplay" value="kanji" style="cursor: pointer;"><span>漢字</span></input></div>
+						<div style="cursor: pointer;" onclick="updateTestSettings('questionDisplay', 'english')"><input type="radio" name="questionDisplay" value="english" style="cursor: pointer;"><span>EN</span></input></div>
+						<div style="cursor: pointer;" onclick="updateTestSettings('questionDisplay', 'kana')"><input type="radio" name="questionDisplay" value="kana" style="cursor: pointer;" checked="checked"><span>かな</span></input></div>
+					</div>
+					<div id="toggle-options">
+						<div style="cursor: pointer;" onclick="updateTestSettings('romaji', !userData.testSettings.romaji)"><input type="checkbox" name="romaji" style="cursor: pointer;"><span>Romaji</span></input></div>
+						<div style="cursor: pointer;" onclick="updateTestSettings('furigana', !userData.testSettings.furigana)"><input type="checkbox" name="furigana" style="cursor: pointer;"><span>振り仮名</span></input></div>
+					</div>
+					<div id="answer-options">
+			            <div style="cursor: pointer;" onclick="updateTestSettings('answerDisplay', 'kanji')"><input type="radio" name="answerDisplay" value="kanji" style="cursor: pointer;" checked="checked"><span>漢字</span></input></div>
+			            <div style="cursor: pointer;" onclick="updateTestSettings('answerDisplay', 'english')"><input type="radio" name="answerDisplay" value="english" style="cursor: pointer;"><span>EN</span></input></div>
+			            <div style="cursor: pointer;" onclick="updateTestSettings('answerDisplay', 'kana')"><input type="radio" name="answerDisplay" value="kana" style="cursor: pointer;"><span>かな</span></input></div>
+			        </div>
+				</div>
+	        </div>
+	        <div id="content">
+	            <div id="app" class="noselect">
+					<div id="questionGridContainer">
+						<div id="questionGrid" style="grid-template: repeat(1, 100%) / repeat(1, 100%);">
+						    <div class="box">
+			                    <div class="inner-box">
+			                        <p class="kana">
+										<span class="onyomi kana">レイ</span>
+										<span class="onyomi romaji">rei</span>
+										<span class="kunyomi kana">たと</span>
+										<span class="kunyomi romaji">tato</span>
+										<span class="kunyomi kana">える</span>
+										<span class="kunyomi romaji">eru</span>
+									</p>
+			                        <p class="kanji">
+										<span>例</span>
+									</p>
+			                        <p class="english">
+										<span>Example</span>
+									</p>
+			                    </div>
+						    </div>
+	                    </div>
+				    </div>
+				    <div id="answerGridContainer">
+				        <div id="answerGrid" style="grid-template: repeat(2, 50%) / repeat(2, 50%);">
+				            <div class="box" style="cursor: pointer;">
+			                    <div class="inner-box">
+			                        <p class="kana">
+										<span class="onyomi kana">レイ</span>
+										<span class="onyomi romaji">rei</span>
+										<span class="kunyomi kana">たと</span>
+										<span class="kunyomi romaji">tato</span>
+										<span class="kunyomi kana">える</span>
+										<span class="kunyomi romaji">eru</span>
+									</p>
+			                        <p class="kanji">
+										<span>例</span>
+									</p>
+			                        <p class="english">
+										<span>Example</span>
+									</p>
+			                    </div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+	        </div>
+	    </div>
+		<div id="questionSelectFullInfo" class="modal noselect" style="display: none;">
+			<div id="questionSelectFullInfoInner">
+                <div class="inner-box">
+                    <p class="kana">
+						<span class="onyomi kana">レイ</span>
+						<span class="onyomi romaji">rei</span>
+						<span class="kunyomi kana">たと</span>
+						<span class="kunyomi romaji">tato</span>
+						<span class="kunyomi kana">える</span>
+						<span class="kunyomi romaji">eru</span>
+					</p>
+                    <p class="kanji">
+						<span>例</span>
+					</p>
+                    <p class="english">
+						<span>Example</span>
+					</p>
+                </div>
+			</div>
+		</div>
+
+		<div id="questionSelectContainer" class="modal noselect" style="display: none;">
+			<div id="questionSelect">
+				<div class="level -1">
+					<div style="cursor: pointer;" id="checkall" onclick="setManyQuestions('all', true)"><input type="button" style="cursor: pointer;"><span>Select All</span></input></div>
+					<div style="cursor: pointer;" id="uncheckall" onclick="setManyQuestions('all', false)"><input type="button" style="cursor: pointer;"><span>Unselect All</span></input></div>
+					<span id="numSelected">? questions selected</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="numSelectedWarning" style="font-weight: bold; color: red;"></span>
+				</div>
+			</div>
+		</div>
+
+	    <div id="overlay" style="display: none;"></div>
+
+	    <script type="text/javascript" src="scripts/opentype.min.js"></script>
+		<script type="text/javascript" src="scripts/Kana to Romaji.js"></script>
+	    <script type="text/javascript" src="scripts/cookies.js"></script>
+	    <script type="text/javascript" src="scripts/rng.js"></script>
+	    <script type="text/javascript" src="scripts/consts.js"></script>
+		<script type="text/javascript" src="scripts/box.js"></script>
+	    <script type="text/javascript" src="scripts/HTML Manipulation Functions.js"></script>
+	    <script type="text/javascript" src="scripts/funcs.js"></script>
+	    <script type="text/javascript" src="scripts/main.js"></script>
+
+	</body>
+</html>
